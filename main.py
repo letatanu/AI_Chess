@@ -37,14 +37,14 @@ def train():
     counters = []
     oldNumberOfGames = numberOfGames
     numberOfWins = []
-    while numberOfGames < 10000:
+    while numberOfGames < 50000:
         a , pathCounter  = agent.train()
         if a:
             numberOfGames += a
-            counters.append(pathCounter)
             agent.pathCounter = 0
 
         if ((oldNumberOfGames != numberOfGames) and not (numberOfGames % 100)):
+            counters.append(pathCounter)
             numberOfWin = 0
             for i in range(10):
                 result = playVSRandom(agent)
@@ -54,14 +54,13 @@ def train():
                     numberOfWin +=1
 
             numberOfWins.append(numberOfWin*40)
-
             print('Processed numberOfGames: ', numberOfGames)
             pickle.dump(agent.Q_Matrix, open('Q_Matrix.p', "wb"))
             plt.figure(1)
             plt.clf()
             plt.plot(counters)
             plt.title("Number of moves for a game")
-            plt.xlabel("n_th game")
+            plt.xlabel("(nx100)_th game")
             plt.ylabel("Number of moves")
             plt.savefig('stat.png')
 
