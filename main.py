@@ -12,7 +12,7 @@ def randomPlayer(board):
     l = len(possibleActions)
     if l == 0:
         return "0000"
-    randomChoice = np.random.randint(len(possibleActions))
+    randomChoice = np.random.randint(l)
     chosenAction = possibleActions[randomChoice]
     return chosenAction
 
