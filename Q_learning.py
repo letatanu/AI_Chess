@@ -71,26 +71,35 @@ class Agent:
         currentBoard = chess.Board(state)
         currentBoard.push_uci(action)
         nextState = currentBoard.fen()
-        #nextState = self.wappingSide(currentBoard.fen())
         return nextState
 
 
     def actionWithMaxQ_ValInState(self, state, isMutated): #return action
 
+        newState = copy.deepcopy(state)
         if not self.gameObject.turn:
-            state = self.swapSide(state)
+            newState = self.swapSide(state)
 
-        virtualBoard = chess.Board(state)
-        actions = self.getActions(state)
+        virtualBoard = chess.Board(newState)
+        actions = self.getActions(newState)
 
         if (not bool(actions)) or isMutated:
 
             possibleActions = np.array([a for a in virtualBoard.legal_moves], dtype=str)
+
             randomChoice = np.random.randint(0, len(possibleActions))
+
             chosenAction = possibleActions[randomChoice]
 
             # "f2f4" -> "f4"
             piece = virtualBoard.piece_at(chess.SQUARE_NAMES.index(chosenAction[2:4]))
+            # piece_ = virtualBoard.piece_at(chess.SQUARE_NAMES.index(chosenAction[:2]))
+            # print(self.gameObject)
+            # print('if')
+            # print(virtualBoard)
+            # if str(piece_) == 'None':
+            #     print(piece_)
+
             scoreForAction = self.scoreTable[str(piece)]
 
             if chosenAction not in actions:
@@ -98,7 +107,7 @@ class Agent:
                 actions[chosenAction] = scoreForAction
             ## mutating
             else:
-                nextState = self.getNextStateFrom(state, chosenAction)
+                nextState = self.getNextStateFrom(newState, chosenAction)
                 self.getActions(nextState)
                 nextStateActions = self.Q_Matrix[nextState]
                 if bool(nextStateActions):
@@ -109,8 +118,14 @@ class Agent:
         else:
             chosenAction = max(actions.items(), key=operator.itemgetter(1))[0]
             piece = virtualBoard.piece_at(chess.SQUARE_NAMES.index(chosenAction[2:4]))
+            # piece_ = virtualBoard.piece_at(chess.SQUARE_NAMES.index(chosenAction[:2]))
+            # print(self.gameObject)
+            # print('else')
+            # print(virtualBoard)
+            # if str(piece_) == 'None':
+            #     print(piece_)
             scoreForAction = self.scoreTable[str(piece)]
-            nextState = self.getNextStateFrom(state, chosenAction)
+            nextState = self.getNextStateFrom(newState, chosenAction)
             self.getActions(nextState)
             nextStateActions = self.Q_Matrix[nextState]
             if bool(nextStateActions):
