@@ -32,9 +32,11 @@ def test():
     board = chess.Board()
     agent = Agent(Q_Matrix=q_matrix, gameObject=board)
     while not agent.gameObject.is_game_over():
+        print()
         print("Computer's turn ...")
         agent.play()
         print(agent.gameObject)
+        print()
         print("The player's turn ....")
         move = str(input("Enter move:"))
         possible_moves = np.array([a for a in agent.gameObject.legal_moves], dtype=str)
