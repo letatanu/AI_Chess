@@ -1,6 +1,8 @@
-
-
-
+#! python3
+"""
+Author: Long Phan, Nhut Le
+Module: Q_learning.py
+"""
 import chess
 import numpy as np
 import operator
@@ -48,24 +50,35 @@ class Agent:
         boardStateArray2 = boardStateArray1[0].split('/')
         boardStateArray2.reverse()
         boardStateArray2 = [x[::-1] for x in boardStateArray2]
-        boardStateArray1[0] = '/'.join(boardStateArray2)
-        boardStateArray1[1] = 'w'
+        boardStateArray1[0] = '/'.join(boardStateArray2) # Piece placement (from White's perspective)
+        boardStateArray1[1] = 'w' # Active color. "w" means White moves next, "b" means Black moves next. Always set to "w"
+        boardStateArray1[2] = boardStateArray1[2].swapcase() # Castling availability
+        uppercases = ''
+        lowercases = ''
+        for c in boardStateArray1[2]:
+            if c.isupper():
+                uppercases += c
+            else:
+                lowercases += c
+        boardStateArray1[2] = uppercases + lowercases
+        if boardStateArray1[3] != '-': # En passant target square in algebraic notation
+            boardStateArray1[3] = self.swapLocation(boardStateArray1[3])
         boardStateArray1 = ' '.join(boardStateArray1)
         return boardStateArray1
 
     def swapAction(self, uci_str):
-        boardSquares = copy.deepcopy(chess.SQUARE_NAMES)
-        boardSquares.reverse()
-        start = uci_str[:2]
-        end = uci_str[2:4]
+        start = uci_str[:2] # get the first 2 characters
+        end = uci_str[2:4] # get the 3rd and 4th characters
         promotion = ''
         if len(uci_str) == 5:
-            promotion = uci_str[4]
-        start = boardSquares[chess.SQUARE_NAMES.index(start)]
-        end = boardSquares[chess.SQUARE_NAMES.index(end)]
-        return start + end + promotion
+            promotion = uci_str[4] # get the 5th character if it is there
+        return self.swapLocation(start) + self.swapLocation(end) + promotion
 
-
+    def swapLocation(self, algebraic_location_str):
+        boardSquares = copy.deepcopy(chess.SQUARE_NAMES)
+        boardSquares.reverse()
+        algebraic_location_str = boardSquares[chess.SQUARE_NAMES.index(algebraic_location_str)]
+        return algebraic_location_str
 
     def getNextStateFrom(self, state, action):
         currentBoard = chess.Board(state)
@@ -93,12 +106,6 @@ class Agent:
 
             # "f2f4" -> "f4"
             piece = virtualBoard.piece_at(chess.SQUARE_NAMES.index(chosenAction[2:4]))
-            # piece_ = virtualBoard.piece_at(chess.SQUARE_NAMES.index(chosenAction[:2]))
-            # print(self.gameObject)
-            # print('if')
-            # print(virtualBoard)
-            # if str(piece_) == 'None':
-            #     print(piece_)
 
             scoreForAction = self.scoreTable[str(piece)]
 
@@ -118,12 +125,6 @@ class Agent:
         else:
             chosenAction = max(actions.items(), key=operator.itemgetter(1))[0]
             piece = virtualBoard.piece_at(chess.SQUARE_NAMES.index(chosenAction[2:4]))
-            # piece_ = virtualBoard.piece_at(chess.SQUARE_NAMES.index(chosenAction[:2]))
-            # print(self.gameObject)
-            # print('else')
-            # print(virtualBoard)
-            # if str(piece_) == 'None':
-            #     print(piece_)
             scoreForAction = self.scoreTable[str(piece)]
             nextState = self.getNextStateFrom(newState, chosenAction)
             self.getActions(nextState)

@@ -1,3 +1,8 @@
+#! python3
+"""
+Author: Long Phan, Nhut Le
+Module: main.py
+"""
 from Q_learning import *
 import pickle
 import matplotlib.pyplot as plt
@@ -8,27 +13,24 @@ def train():
     numberOfGames = 0
     agent = Agent(gameObject=board)
     counters = []
-    counter = 0
-    while numberOfGames < 10:
+    oldNumberOfGames = numberOfGames
+    while numberOfGames < 10000:
         a , pathCounter  = agent.train()
         if a:
             numberOfGames += a
             counters.append(pathCounter)
             agent.pathCounter = 0
 
-
-        counter+=1
-        # print(counter)
-        # print(agent.gameObject)
-        if not (counter % 50):
+        if ((oldNumberOfGames != numberOfGames) and not (numberOfGames % 100)):
+            print('Processed numberOfGames: ', numberOfGames)
             pickle.dump(agent.Q_Matrix, open('Q_Matrix.p', "wb"))
-
-    plt.plot(counters)
-    plt.title("Number of moves for a game")
-    plt.xlabel("n_th game")
-    plt.ylabel("Number of moves")
-    plt.savefig('stat.png')
-
+            plt.clf()
+            plt.plot(counters)
+            plt.title("Number of moves for a game")
+            plt.xlabel("n_th game")
+            plt.ylabel("Number of moves")
+            plt.savefig('stat.png')
+            oldNumberOfGames = numberOfGames
 
 def test():
     q_matrix = pickle.load(open('Q_Matrix.p', "rb"))
@@ -49,9 +51,6 @@ def test():
         print(agent.gameObject)
         print()
         print("-------------------------------------")
-
-
-
 
 def main():
    train()
