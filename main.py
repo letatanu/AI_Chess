@@ -7,6 +7,28 @@ from Q_learning import *
 import pickle
 import matplotlib.pyplot as plt
 
+def randomPlayer(board):
+    possibleActions = np.array([a for a in board.legal_moves], dtype=str)
+    l = len(possibleActions)
+    if l == 0:
+        return "0000"
+    randomChoice = np.random.randint(len(possibleActions))
+    chosenAction = possibleActions[randomChoice]
+    return chosenAction
+
+def playVSRandom(testAgent):
+    board = chess.Board()
+    testAgent = Agent(gameObject=board)
+    while not testAgent.gameObject.is_game_over():
+        testAgent.play()
+        testAgent.gameObject.push_uci(randomPlayer(testAgent.gameObject))
+    result = testAgent.gameObject.result()
+    def convert_to_float(frac_str):
+        try:
+            return float(frac_str)
+        except ValueError:
+            return 0.5
+    return convert_to_float(result)
 
 def train():
     board = chess.Board()
@@ -14,6 +36,7 @@ def train():
     agent = Agent(gameObject=board)
     counters = []
     oldNumberOfGames = numberOfGames
+    numberOfWins = []
     while numberOfGames < 10000:
         a , pathCounter  = agent.train()
         if a:
@@ -22,14 +45,33 @@ def train():
             agent.pathCounter = 0
 
         if ((oldNumberOfGames != numberOfGames) and not (numberOfGames % 100)):
+            numberOfWin = 0
+            for i in range(10):
+                result = playVSRandom(agent)
+                if result == 0:
+                    numberOfWin -=1
+                if result == 1:
+                    numberOfWin +=1
+
+            numberOfWins.append(numberOfWin*40)
+
             print('Processed numberOfGames: ', numberOfGames)
             pickle.dump(agent.Q_Matrix, open('Q_Matrix.p', "wb"))
+            plt.figure(1)
             plt.clf()
             plt.plot(counters)
             plt.title("Number of moves for a game")
             plt.xlabel("n_th game")
             plt.ylabel("Number of moves")
             plt.savefig('stat.png')
+
+            plt.figure(2)
+            plt.clf()
+            plt.plot(numberOfWins)
+            plt.title("Elo at n_th game")
+            plt.xlabel("(nx100)_th game")
+            plt.ylabel("Elo")
+            plt.savefig('elo.png')
             oldNumberOfGames = numberOfGames
 
 def test():

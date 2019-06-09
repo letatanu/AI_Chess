@@ -100,7 +100,7 @@ class Agent:
 
             possibleActions = np.array([a for a in virtualBoard.legal_moves], dtype=str)
 
-            randomChoice = np.random.randint(0, len(possibleActions))
+            randomChoice = np.random.randint(len(possibleActions))
 
             chosenAction = possibleActions[randomChoice]
 
