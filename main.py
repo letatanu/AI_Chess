@@ -23,6 +23,7 @@ def playVSRandom(testAgent):
         testAgent.play()
         testAgent.gameObject.push_uci(randomPlayer(testAgent.gameObject))
     result = testAgent.gameObject.result()
+    result = result.split('/')[0]
     def convert_to_float(frac_str):
         try:
             return float(frac_str)
