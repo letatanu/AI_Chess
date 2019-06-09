@@ -9,21 +9,24 @@ def train():
     agent = Agent(gameObject=board)
     counters = []
     counter = 0
-    while numberOfGames < 100:
+    while numberOfGames < 10:
         a , pathCounter  = agent.train()
         if a:
             numberOfGames += a
             counters.append(pathCounter)
+            agent.pathCounter = 0
+
+
         counter+=1
         # print(counter)
-        print(agent.gameObject)
+        # print(agent.gameObject)
         if not (counter % 50):
             pickle.dump(agent.Q_Matrix, open('Q_Matrix.p', "wb"))
 
     plt.plot(counters)
-    plt.title("Number of Paths for a game")
+    plt.title("Number of moves for a game")
     plt.xlabel("n_th game")
-    plt.ylabel("Number of Paths")
+    plt.ylabel("Number of moves")
     plt.savefig('stat.png')
 
 
@@ -51,8 +54,8 @@ def test():
 
 
 def main():
-   # train()
-    test()
+   train()
+   #  test()
 
 if __name__ == '__main__':
     main()

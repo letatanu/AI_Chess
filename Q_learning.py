@@ -147,11 +147,11 @@ class Agent:
         isMutated = np.random.randint(0,9) < 3
         action = self.actionWithMaxQ_ValInState(currentState, isMutated=isMutated)
 
-        if self.gameObject.turn:
-            print("w")
-        else:
-            print("b")
-        print(action)
+        # if self.gameObject.turn:
+        #     print("w")
+        # else:
+        #     print("b")
+        # print(action)
         self.pathCounter +=1
         self.gameObject.push_uci(action)
         if self.gameObject.is_game_over():
