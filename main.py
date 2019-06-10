@@ -6,6 +6,7 @@ Module: main.py
 from Q_learning import *
 import pickle
 import matplotlib.pyplot as plt
+import sys
 
 def randomPlayer(board):
     possibleActions = np.array([a for a in board.legal_moves], dtype=str)
@@ -57,16 +58,16 @@ def train():
             numberOfWins.append(numberOfWin*40)
             print('Processed numberOfGames: ', numberOfGames)
             pickle.dump(agent.Q_Matrix, open('Q_Matrix.p', "wb"))
-            plt.figure(1)
             plt.clf()
+            plt.figure(1)
             plt.plot(counters)
             plt.title("Number of moves for a game")
             plt.xlabel("(nx100)_th game")
             plt.ylabel("Number of moves")
             plt.savefig('stat.png')
 
-            plt.figure(2)
             plt.clf()
+            plt.figure(2)
             plt.plot(numberOfWins)
             plt.title("Elo at n_th game")
             plt.xlabel("(nx100)_th game")
@@ -75,6 +76,7 @@ def train():
             oldNumberOfGames = numberOfGames
 
 def test():
+    print("Loading...")
     q_matrix = pickle.load(open('Q_Matrix.p', "rb"))
     board = chess.Board()
     agent = Agent(Q_Matrix=q_matrix, gameObject=board)
@@ -88,15 +90,17 @@ def test():
         move = str(input("Enter move:"))
         possible_moves = np.array([a for a in agent.gameObject.legal_moves], dtype=str)
         while move not in possible_moves:
-            move = str(input("The move is not valid, please enter the move again:"))
+            move = str(input("The move is not valid, please enter the move again.\nPossible moves are " + ', '.join(possible_moves) + ':'))
         agent.gameObject.push_uci(move)
         print(agent.gameObject)
         print()
         print("-------------------------------------")
 
 def main():
-   train()
-   #  test()
+    if len(sys.argv) > 1 and sys.argv[1] == 'train':
+        train()
+    else:
+        test()
 
 if __name__ == '__main__':
     main()
