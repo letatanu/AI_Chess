@@ -1,7 +1,7 @@
 # AI_Chess
 ![demo](demo.gif)
 
-This project is to use the reinfocement learning to train an agent that can play chess vs human players.
+This project is to train an agent that can play chess vs human players by using the reinfocement learning.
 
 # Reinforcement Learning
 The reinforcement learning is simply a table of states and actions, where its value is the reward for a specific state with associating action. Below is the example of a Q-matrix used in the reinforcement learning method.
