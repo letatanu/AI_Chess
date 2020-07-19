@@ -8,7 +8,7 @@ The reinforcement learning is simply a table of states and actions, where its va
 ![](example.png)
 ## Encoding a board
 
-We  encode  a  board  as  a  Forsyth-Edwards  Notation  (FEN) string. An  example  of  aboard in FEN is:  `rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b Kkqe3  1  2`.   The  algebraic  notation  is  used  to  define  cells  and  moves  in  a  board.   It  uses  acoordinate system to identify a specific cell from the board
+We  encode  a  board  as  a  Forsyth-Edwards  Notation  (FEN) string. An  example  of  a board in FEN is:  `rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b Kkqe3  1  2`.   The  algebraic  notation  is  used  to  define  cells  and  moves  in  a  board.   It  uses  acoordinate system to identify a specific cell from the board
 
 ![](1.png)
 
