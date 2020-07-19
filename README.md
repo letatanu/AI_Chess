@@ -45,4 +45,4 @@ Elo         |  The number of moves at every 100 games
 
 The number of moves recorded every 100 games is reported right above. We hoped the number of moves converging at an optimum because we train the agent for both sides. From the result, it seems to be converging at the end. 
 # Evaluation
-The Agent plays against the Random Agent in 100 games.  It wins 100 games.  That is apromising result.
+The Agent plays against the Random Agent in 100 games.  It wins 100 games.  That is a promising result.
