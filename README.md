@@ -22,6 +22,8 @@ We initialize the agent with learning rate is 0.1, ![\gamma](https://latex.codec
 2. If the current state is not in the Q-Matrix or the mutation is occurring in this state, choose a random action from all possible actions above and perform it. Otherwise, the agent will perform the move having the most score in those possible actions. 
 3. We set a 30% chance of mutation for every action. 
 4. Update the current state in Q-Matrix as: 
+\
+`Q(s,a) = Q(s,a) + learning_rate*(reward+` ![\gamma](https://latex.codecogs.com/png.latex?\dpi{100}\gamma)`*argmax(Q(s',a')) - Q(s,a))`
 # Training
 We will train the Agent in about 35000 games. For every 100 games, we analysis the result in two metrics: Elo and Number of moves in a game.
 ## Improvement in Training
